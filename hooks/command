@@ -48,10 +48,10 @@ then
 fi
 
 # shellcheck disable=SC1090,SC1091
-source "$VENV/bin/activate"
+(source "$VENV/bin/activate"
 pip3 install -q --disable-pip-version-check -r "$plugin_dir/requirements.txt"
 
 for pipeline in "$pipelines"
 do
   python3 "$plugin_dir/linter.py" "$pipeline"
-done
+done)
