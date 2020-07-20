@@ -1,0 +1,14 @@
+name: Pipeline linter
+description: validate buildkite pipelines.
+author: https://github.com/xiaket
+requirements:
+  - bash
+  - python3
+configuration:
+  properties:
+    pipelines:
+      type: [string, array]
+      minItems: 1
+  required:
+    - pipelines
+  additionalProperties: false

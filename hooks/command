@@ -1,0 +1,56 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# Reads either a value or a list from plugin config
+function plugin_read_list() {
+  local prefix="BUILDKITE_PLUGIN_PIPELINE_LINTER_$1"
+  local parameter="${prefix}_0"
+
+  if [[ -n "${!parameter:-}" ]]; then
+    local i=0
+    local parameter="${prefix}_${i}"
+    while [[ -n "${!parameter:-}" ]]; do
+      echo "${!parameter}"
+      i=$((i+1))
+      parameter="${prefix}_${i}"
+    done
+  elif [[ -n "${!prefix:-}" ]]; then
+    echo "${!prefix}"
+  fi
+}
+
+IFS=$'\n\t'
+pipelines=()
+
+# Evaluate all the globs and return the files that exist
+for pipeline in $(plugin_read_list PIPELINES) ; do
+  if [[ -e $pipeline ]] ; then
+    pipelines+=("$pipeline")
+  fi
+done
+
+if [[ -z ${pipelines:-} ]] ; then
+  >&2 echo "No pipelines found to checked"
+  exit 1
+fi
+
+echo "--- :buildkite: Validating pipelines"
+
+VENV=venv
+
+if [ ! -f "$VENV/bin/activate" ]
+then
+  python3 -m venv "$VENV"
+fi
+
+# shellcheck disable=SC1090,SC1091
+source "$VENV/bin/activate"
+pip3 install -q --disable-pip-version-check -r requirements.txt
+
+for pipeline in "$pipelines"
+do
+  python3 linter.py "$pipeline"
+done
