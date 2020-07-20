@@ -39,7 +39,8 @@ fi
 
 echo "--- :buildkite: Validating pipelines"
 
-VENV=venv
+plugin_dir="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
+VENV=pipline_linter_venv
 
 if [ ! -f "$VENV/bin/activate" ]
 then
@@ -48,9 +49,9 @@ fi
 
 # shellcheck disable=SC1090,SC1091
 source "$VENV/bin/activate"
-pip3 install -q --disable-pip-version-check -r requirements.txt
+pip3 install -q --disable-pip-version-check -r "$plugin_dir/requirements.txt"
 
 for pipeline in "$pipelines"
 do
-  python3 linter.py "$pipeline"
+  python3 "$plugin_dir/linter.py" "$pipeline"
 done
