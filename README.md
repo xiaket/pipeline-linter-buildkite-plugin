@@ -13,6 +13,12 @@ steps:
             - .buildkite/*.yml
 ```
 
+This tool is also available as a docker image, you can run it as:
+
+```
+docker run -v /path/to/your/repo/.buildkite/:/pipelines/ xiaket/buildkite-pipeline-linter:master /pipelines/pipeline.yml
+```
+
 ## License
 
 MIT (see [LICENSE](LICENSE))
