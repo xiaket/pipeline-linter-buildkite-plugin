@@ -16,7 +16,9 @@ steps:
 This tool is also available as a docker image, you can run it as:
 
 ```
-docker run -v /path/to/your/repo/.buildkite/:/pipelines/ xiaket/buildkite-pipeline-linter:master /pipelines/pipeline.yml
+docker run -v /path/to/your/repo/.buildkite/:/pipelines/ \
+  xiaket/buildkite-pipeline-linter \
+  /pipelines/pipeline.yml
 ```
 
 ## License
